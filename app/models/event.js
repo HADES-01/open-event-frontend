@@ -73,7 +73,7 @@ export default class Event extends ModelBase.extend(CustomPrimaryKeyMixin, {
 
   schedulePublishedOn: attr('moment', { defaultValue: () => moment(0) }),
 
-  hasOwnerInfo: attr('boolean',  { defaultValue: false }),
+  hasOwnerInfo: attr('boolean', { defaultValue: false }),
 
   ownerName        : attr('string'),
   ownerDescription : attr('string'),
@@ -181,6 +181,18 @@ export default class Event extends ModelBase.extend(CustomPrimaryKeyMixin, {
 
   sessionsByState: computed('sessions', function() {
     return groupBy(this.sessions.toArray(), 'data.state');
+  }),
+
+  bannerLocation: computed('locationName', 'online', function() {
+    if (this.online && this.locationName) {
+      return `Online Event and In-Person Event at ${this.locationName}`;
+    } else if (this.online) {
+      return 'Online Event';
+    } else if (this.locationName) {
+      return this.locationName;
+    } else {
+      return 'Location to be announced';
+    }
   })
 
-}) {}
+}) { }
